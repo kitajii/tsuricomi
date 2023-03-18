@@ -1,0 +1,26 @@
+version: '2'
+
+services:
+    db:
+        build: ./docker/mysql
+        ports:
+            - "33306:3306"
+        environment:
+            MYSQL_ROOT_HOST: '%'
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_USER: tsuricomiuser
+            MYSQL_PASSWORD: tsuricomipw
+            MYSQL_DATABASE: tsuricomi
+        volumes:
+            - ./docker/mysql/data:/var/lib/mysql
+            - ./docker/mysql/initdb.d:/docker-entrypoint-initdb.d
+        cap_add:
+            - SYS_NICE
+    php:
+        build: ./docker/php
+        ports:
+            - "8080:80"
+        volumes:
+            - ./src:/var/www
+        depends_on:
+            - db
