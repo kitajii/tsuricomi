@@ -18,7 +18,9 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): Response
     {
+        $auth = Auth::user()->load('profile');
         return Inertia::render('Profile/Edit', [
+            'auth' => $auth,
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
         ]);
