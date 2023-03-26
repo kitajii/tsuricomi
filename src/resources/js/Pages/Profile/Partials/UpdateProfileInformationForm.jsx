@@ -32,15 +32,24 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, birt
     }, []);
 
     /**
+     * 釣り歴の入力禁止文字
+     * 入力をonKeyDownで判定し、該当すれば入力イベント発火しない
+     * @param {event} e 
+     * @returns 
+     */
+    const blockInvalidChar = e => ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault();
+
+    /**
      * 釣り歴のフォーマットチェック
-     * @param {Event} e 
+     * @param {event} e 
      */
     const changeExperience = (e) => {
+        var experience = null;
         if(e.target.value.match("^[0-9]{1,2}$")) {
-            var experience = e.target.value;
+            experience = e.target.value;
         } else {
             // 0〜99以外の場合は元の値に戻す
-            var experience = data.experience;
+            experience = data.experience;
         }
         // 値が空文字の場合はnullに変換
         if (e.target.value === '') {
@@ -51,7 +60,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, birt
 
     /**
      * 更新処理
-     * @param {Event} e 
+     * @param {event} e 
      */
     const submit = (e) => {
         e.preventDefault();
@@ -73,6 +82,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, birt
                     <TextField
                         id="name"
                         label="名前"
+                        name="name"
                         value={data.name}
                         variant="standard"
                         error={errors.name}
@@ -88,6 +98,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, birt
                     <TextField
                         id="email"
                         type="email"
+                        name="email"
                         label="メールアドレス"
                         value={data.email}
                         variant="standard"
@@ -203,11 +214,13 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, birt
                             id="experience"
                             label="釣り歴"
                             type="number"
+                            name="experience"
+                            className="block"
                             value={data.experience}
                             variant="standard"
                             error={errors.experience}
                             onChange={(e) => changeExperience(e)}
-                            className="block"
+                            onKeyDown={blockInvalidChar}
                             autoComplete="off"
                             fullWidth
                             InputProps={{
@@ -225,15 +238,17 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, birt
                 <div>
                     <TextField
                         id="introduction"
-                        label="自己紹介"
-                        multiline
-                        rows={4}
-                        defaultValue={data.introduction}
+                        label="コメント"
+                        name="introduction"
+                        type="textarea"
+                        className="block"
+                        value={data.introduction}
                         variant="standard"
                         error={errors.introduction}
                         onChange={(e) => setData('introduction', e.target.value)}
-                        className="block"
                         autoComplete="off"
+                        rows={4}
+                        multiline
                         fullWidth
                     />
                 </div>

@@ -47,9 +47,12 @@ class ProfileController extends Controller
         if (isset($request->birthday_year) && isset($request->birthday_month) && isset($request->birthday_day)) {
             $isEnableDate = checkdate($request->birthday_month,$request->birthday_day ,$request->birthday_year);
         }
-        if ((!$isEnableDate)) {
+        //年月日全てnullかどうか
+        $isBirthdayAllNull = is_null($request->birthday_year) && is_null($request->birthday_month) && is_null($request->birthday_day);
+        // 有効な日付じゃない && 年月日いずれかにデータがセットされている:更新不可（全てnullだったら更新可）
+        if (!$isEnableDate && !$isBirthdayAllNull) {
             $errors = new \Illuminate\Support\MessageBag();
-            $errors->add('birthday', '生年月日を正しく入力してください');
+            $errors->add('birthday', '生年月日を正しく選択してください');
             return Redirect::route('profile.edit')->withInput()->withErrors($errors);
         }
         try {

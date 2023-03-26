@@ -1,11 +1,8 @@
 import { useRef, useState } from 'react';
-import DangerButton from '@/Components/DangerButton';
 import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
 import Modal from '@/Components/Modal';
-import SecondaryButton from '@/Components/SecondaryButton';
-import TextInput from '@/Components/TextInput';
 import { useForm } from '@inertiajs/react';
+import { Button, TextField } from '@mui/material';
 
 export default function DeleteUserForm({ className }) {
     const [confirmingUserDeletion, setConfirmingUserDeletion] = useState(false);
@@ -47,49 +44,41 @@ export default function DeleteUserForm({ className }) {
         <section className={`space-y-6 ${className}`}>
             <header>
                 <h2 className="text-lg font-medium text-gray-900">アカウント削除</h2>
-
                 <p className="mt-1 text-sm text-gray-600">
                     アカウントが削除されると、すべてのデータが完全に削除されます。
                 </p>
             </header>
-
-            <DangerButton onClick={confirmUserDeletion}>アカウント削除</DangerButton>
-
+            <Button onClick={confirmUserDeletion} variant="contained" color="error">アカウント削除</Button>
             <Modal show={confirmingUserDeletion} onClose={closeModal}>
                 <form onSubmit={deleteUser} className="p-6">
                     <h2 className="text-lg font-medium text-gray-900">
                         アカウントを削除してもよろしいですか？
                     </h2>
-
                     <p className="mt-1 text-sm text-gray-600">
                         アカウントが削除されると、すべてのデータが完全に削除されます。
-                        アカウントを完全に削除することを確認するために、パスワードを入力してください。
+                        アカウントを完全に削除するには、パスワードを入力してください。
                     </p>
-
                     <div className="mt-6">
-                        <InputLabel htmlFor="password" value="Password" className="sr-only" />
-
-                        <TextInput
+                        <TextField
                             id="password"
+                            label="パスワード"
                             type="password"
-                            name="password"
+                            className="block"
                             ref={passwordInput}
                             value={data.password}
+                            variant="standard"
+                            error={errors.password}
                             onChange={(e) => setData('password', e.target.value)}
-                            className="mt-1 block w-3/4"
+                            autoComplete="off"
                             isFocused
-                            placeholder="Password"
+                            required
+                            fullWidth
                         />
-
-                        <InputError message={errors.password} className="mt-2" />
+                        <InputError className="mt-2" message={errors.password} />
                     </div>
-
                     <div className="mt-6 flex justify-end">
-                        <SecondaryButton onClick={closeModal}>キャンセル</SecondaryButton>
-
-                        <DangerButton className="ml-3" disabled={processing}>
-                            削除する
-                        </DangerButton>
+                        <Button onClick={closeModal} color="inherit">キャンセル</Button>
+                        {processing ? <Button disabled className="ml-3" variant="contained" color="error">削除する</Button> : <Button onClick={deleteUser} className="ml-3" variant="contained" color="error">削除する</Button>}
                     </div>
                 </form>
             </Modal>

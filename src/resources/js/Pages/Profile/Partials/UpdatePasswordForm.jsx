@@ -1,10 +1,8 @@
 import { useRef } from 'react';
 import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
 import { useForm } from '@inertiajs/react';
 import { Transition } from '@headlessui/react';
+import { Button, TextField } from '@mui/material';
 
 export default function UpdatePasswordForm({ className }) {
     const passwordInput = useRef();
@@ -41,65 +39,64 @@ export default function UpdatePasswordForm({ className }) {
             <header>
                 <h2 className="text-lg font-medium text-gray-900">パスワード更新</h2>
             </header>
-
             <form onSubmit={updatePassword} className="mt-6 space-y-6">
                 <div>
-                    <InputLabel htmlFor="current_password" value="現在のパスワード" />
-
-                    <TextInput
+                    <TextField
                         id="current_password"
-                        ref={currentPasswordInput}
+                        label="現在のパスワード"
+                        type="password"
+                        className="block"
                         value={data.current_password}
+                        variant="standard"
+                        error={errors.current_password}
                         onChange={(e) => setData('current_password', e.target.value)}
-                        type="password"
-                        className="mt-1 block w-full"
-                        autoComplete="current-password"
+                        autoComplete="off"
+                        required
+                        fullWidth
                     />
-
-                    <InputError message={errors.current_password} className="mt-2" />
+                    <InputError className="mt-2" message={errors.current_password} />
                 </div>
-
                 <div>
-                    <InputLabel htmlFor="password" value="新しいパスワード" />
-
-                    <TextInput
+                    <TextField
                         id="password"
-                        ref={passwordInput}
+                        label="新しいパスワード"
+                        type="password"
+                        className="block"
                         value={data.password}
+                        variant="standard"
+                        error={errors.password}
                         onChange={(e) => setData('password', e.target.value)}
-                        type="password"
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
+                        autoComplete="off"
+                        required
+                        fullWidth
                     />
-
-                    <InputError message={errors.password} className="mt-2" />
+                    <InputError className="mt-2" message={errors.password} />
                 </div>
-
                 <div>
-                    <InputLabel htmlFor="password_confirmation" value="新しいパスワード（確認）" />
-
-                    <TextInput
+                    <TextField
                         id="password_confirmation"
-                        value={data.password_confirmation}
-                        onChange={(e) => setData('password_confirmation', e.target.value)}
+                        label="新しいパスワード（確認）"
                         type="password"
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
+                        className="block"
+                        value={data.password_confirmation}
+                        variant="standard"
+                        error={errors.password_confirmation}
+                        onChange={(e) => setData('password_confirmation', e.target.value)}
+                        autoComplete="off"
+                        required
+                        fullWidth
                     />
-
-                    <InputError message={errors.password_confirmation} className="mt-2" />
+                    <InputError className="mt-2" message={errors.password_confirmation} />
                 </div>
-
                 <div className="flex items-center gap-4">
-                    <PrimaryButton disabled={processing}>更新</PrimaryButton>
-
+                    {processing ? <Button disabled variant="contained">更新</Button> : <Button onClick={updatePassword} variant="contained">更新</Button>}
                     <Transition
                         show={recentlySuccessful}
                         enterFrom="opacity-0"
                         leaveTo="opacity-0"
                         className="transition ease-in-out"
                     >
-                        <p className="text-sm text-gray-600">更新しました！</p>
+                        <p className="text-sm text-blue-600">更新しました！</p>
                     </Transition>
                 </div>
             </form>
