@@ -21,7 +21,7 @@ return new class extends Migration
             $table->unsignedTinyInteger('birthday_month')->nullable();
             $table->unsignedTinyInteger('birthday_day')->nullable();
             $table->string('icon_path')->nullable();
-            $table->integer('experience')->nullable();
+            $table->unsignedTinyInteger('experience')->nullable();
             $table->text('introduction')->nullable();
             $table->timestamps();
         });

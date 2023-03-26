@@ -4,7 +4,7 @@ import { Link, useForm, usePage } from '@inertiajs/react';
 import { Transition } from '@headlessui/react';
 import TextField from '@mui/material/TextField';
 import { useEffect, useState } from 'react';
-import { Button, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { Button, FormControl, InputAdornment, InputLabel, MenuItem, Select } from '@mui/material';
 
 export default function UpdateProfileInformation({ mustVerifyEmail, status, birthdaySelectElement, className }) {
     const user = usePage().props.auth;
@@ -14,10 +14,12 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, birt
 
     const { data, setData, patch, errors, processing, recentlySuccessful } = useForm({
         name: user.profile.name,
+        email: user.email,
         birthday_year: user.profile.birthday_year,
         birthday_month: user.profile.birthday_month,
         birthday_day: user.profile.birthday_day,
-        email: user.email,
+        experience: user.profile.experience,
+        introduction: user.profile.introduction,
     });
 
     /**
@@ -30,7 +32,26 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, birt
     }, []);
 
     /**
+     * 釣り歴のフォーマットチェック
+     * @param {Event} e 
+     */
+    const changeExperience = (e) => {
+        if(e.target.value.match("^[0-9]{1,2}$")) {
+            var experience = e.target.value;
+        } else {
+            // 0〜99以外の場合は元の値に戻す
+            var experience = data.experience;
+        }
+        // 値が空文字の場合はnullに変換
+        if (e.target.value === '') {
+            experience = null;
+        }
+        setData('experience', experience);
+    }
+
+    /**
      * 更新処理
+     * @param {Event} e 
      */
     const submit = (e) => {
         e.preventDefault();
@@ -47,7 +68,6 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, birt
                     プロフィール情報を更新できます。
                 </p>
             </header>
-
             <form onSubmit={submit} className="mt-6 space-y-6">
                 <div>
                     <TextField
@@ -64,7 +84,43 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, birt
                     />
                     <InputError className="mt-2" message={errors.name} />
                 </div>
+                <div>
+                    <TextField
+                        id="email"
+                        type="email"
+                        label="メールアドレス"
+                        value={data.email}
+                        variant="standard"
+                        error={errors.email}
+                        onChange={(e) => setData('email', e.target.value)}
+                        className="mt-1 block"
+                        autoComplete="off"
+                        required
+                        fullWidth
+                    />
+                    <InputError className="mt-2" message={errors.email} />
+                </div>
+                {mustVerifyEmail && user.email_verified_at === null && (
+                    <div>
+                        <p className="text-sm mt-2 text-gray-800">
+                            メールアドレスの確認を行なってください
+                            <Link
+                                href={route('verification.send')}
+                                method="post"
+                                as="button"
+                                className="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            >
+                                確認メールを再送信するには、こちらをクリックしてください。
+                            </Link>
+                        </p>
 
+                        {status === 'verification-link-sent' && (
+                            <div className="mt-2 font-medium text-sm text-blue-600">
+                                確認リンクがメールアドレスに送信されました。
+                            </div>
+                        )}
+                    </div>
+                )}
                 <div>
                     <Label className="text-[12px] text-gray-600" htmlFor="birthday" value="生年月日" />
                     <FormControl variant="standard" sx={{ mt: 1, mr: 1, minWidth: 100 }}>
@@ -141,46 +197,46 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, birt
                     </FormControl>
                     <InputError className="mt-2" message={errors.birthday} />
                 </div>
-
+                <div>
+                    <FormControl variant="standard" sx={{  minWidth: 100 }}>
+                        <TextField
+                            id="experience"
+                            label="釣り歴"
+                            type="number"
+                            value={data.experience}
+                            variant="standard"
+                            error={errors.experience}
+                            onChange={(e) => changeExperience(e)}
+                            className="block"
+                            autoComplete="off"
+                            fullWidth
+                            InputProps={{
+                                // shrink: true,
+                                endAdornment: <InputAdornment position="end">年</InputAdornment>,
+                                inputProps:{
+                                    min: 0,
+                                    max: 99,
+                                }
+                            }}
+                        />
+                        <InputError className="mt-2" message={errors.experience} />
+                    </FormControl>
+                </div>
                 <div>
                     <TextField
-                        id="email"
-                        type="email"
-                        label="メールアドレス"
-                        value={data.email}
+                        id="introduction"
+                        label="自己紹介"
+                        multiline
+                        rows={4}
+                        defaultValue={data.introduction}
                         variant="standard"
-                        error={errors.email}
-                        onChange={(e) => setData('email', e.target.value)}
-                        className="mt-1 block"
+                        error={errors.introduction}
+                        onChange={(e) => setData('introduction', e.target.value)}
+                        className="block"
                         autoComplete="off"
-                        required
                         fullWidth
                     />
-                    <InputError className="mt-2" message={errors.email} />
                 </div>
-
-                {mustVerifyEmail && user.email_verified_at === null && (
-                    <div>
-                        <p className="text-sm mt-2 text-gray-800">
-                            Your email address is unverified.
-                            <Link
-                                href={route('verification.send')}
-                                method="post"
-                                as="button"
-                                className="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                            >
-                                Click here to re-send the verification email.
-                            </Link>
-                        </p>
-
-                        {status === 'verification-link-sent' && (
-                            <div className="mt-2 font-medium text-sm text-green-600">
-                                A new verification link has been sent to your email address.
-                            </div>
-                        )}
-                    </div>
-                )}
-
                 <div className="flex items-center gap-4">
                     {processing ? <Button disabled variant="contained">更新</Button> : <Button onClick={submit} variant="contained">更新</Button>}
                     <Transition

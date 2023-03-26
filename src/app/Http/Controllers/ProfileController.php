@@ -52,13 +52,6 @@ class ProfileController extends Controller
             $errors->add('birthday', '生年月日を正しく入力してください');
             return Redirect::route('profile.edit')->withInput()->withErrors($errors);
         }
-
-        // $birthday = $request->birthdayYear . '-' . sprintf('%02d', $request->birthday_month) . '-' . sprintf('%02d',$request->birthday_day);
-        // dd($birthday);
-        // $request->merge([
-        //     'birthday' => $birthday,
-        // ]);
-        // dd($request->validated());
         try {
             $request->user()->fill($request->all());
             $request->user()->profile->fill($request->all());
