@@ -22,8 +22,11 @@ export default function Authenticated({ auth, header, children }) {
 
                             <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink href={route('dashboard')} active={route().current('dashboard')}>
-                                    MAP画面
+                                    MAP
                                 </NavLink>
+                                {/* <NavLink href={route('list')} active={route().current('list')}>
+                                    一覧
+                                </NavLink> */}
                             </div>
                         </div>
 
@@ -54,7 +57,7 @@ export default function Authenticated({ auth, header, children }) {
                                     </Dropdown.Trigger>
 
                                     <Dropdown.Content>
-                                        <Dropdown.Link href={route('profile.edit')}>アカウント情報</Dropdown.Link>
+                                        <Dropdown.Link href={route('profile.edit')}>アカウント管理</Dropdown.Link>
                                         <Dropdown.Link href={route('logout')} method="post" as="button">
                                             ログアウト
                                         </Dropdown.Link>
@@ -105,7 +108,7 @@ export default function Authenticated({ auth, header, children }) {
                         </div>
 
                         <div className="mt-3 space-y-1">
-                            <ResponsiveNavLink href={route('profile.edit')}>アカウント情報</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('profile.edit')}>アカウント管理</ResponsiveNavLink>
                             <ResponsiveNavLink method="post" href={route('logout')} as="button">
                                 ログアウト
                             </ResponsiveNavLink>

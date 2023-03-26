@@ -54,8 +54,8 @@ class RegisteredUserController extends Controller
             event(new Registered($user));
             Auth::login($user);
             DB::commit();
-        } catch (\Throwable $th) {
-            Log::error($th);
+        } catch (\Exception $e) {
+            Log::error($e);
             DB::rollBack();
         }
 

@@ -1,18 +1,37 @@
 import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
+import Label from '@/Components/InputLabel';
 import { Link, useForm, usePage } from '@inertiajs/react';
 import { Transition } from '@headlessui/react';
+import TextField from '@mui/material/TextField';
+import { useEffect, useState } from 'react';
+import { Button, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
-export default function UpdateProfileInformation({ mustVerifyEmail, status, className }) {
+export default function UpdateProfileInformation({ mustVerifyEmail, status, birthdaySelectElement, className }) {
     const user = usePage().props.auth;
+    const [yearList, setYearList] = useState([]);
+    const [monthList, setMonthList] = useState([]);
+    const [dayList, setDayList] = useState([]);
 
     const { data, setData, patch, errors, processing, recentlySuccessful } = useForm({
         name: user.profile.name,
+        birthday_year: user.profile.birthday_year,
+        birthday_month: user.profile.birthday_month,
+        birthday_day: user.profile.birthday_day,
         email: user.email,
     });
 
+    /**
+     * 生年月日のセレクト生成
+     */
+    useEffect(() => {
+        setYearList(Object.values(birthdaySelectElement.yearList).reverse());
+        setMonthList(Object.values(birthdaySelectElement.monthList));
+        setDayList(Object.values(birthdaySelectElement.dayList));
+    }, []);
+
+    /**
+     * 更新処理
+     */
     const submit = (e) => {
         e.preventDefault();
 
@@ -31,34 +50,112 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
 
             <form onSubmit={submit} className="mt-6 space-y-6">
                 <div>
-                    <InputLabel htmlFor="name" value="名前" />
-
-                    <TextInput
+                    <TextField
                         id="name"
-                        className="mt-1 block w-full"
+                        label="名前"
                         value={data.name}
+                        variant="standard"
+                        error={errors.name}
                         onChange={(e) => setData('name', e.target.value)}
+                        className="block"
+                        autoComplete="off"
                         required
-                        isFocused
-                        autoComplete="name"
+                        fullWidth
                     />
-
                     <InputError className="mt-2" message={errors.name} />
                 </div>
 
                 <div>
-                    <InputLabel htmlFor="email" value="メールアドレス" />
+                    <Label className="text-[12px] text-gray-600" htmlFor="birthday" value="生年月日" />
+                    <FormControl variant="standard" sx={{ mt: 1, mr: 1, minWidth: 100 }}>
+                        <InputLabel id="year">年</InputLabel>
+                        <Select
+                            id="year"
+                            arrow=""
+                            name="birthday_year"
+                            value={data.birthday_year}
+                            label="年"
+                            error={errors.birthday}
+                            onChange={(e) => setData('birthday_year', e.target.value)}
+                            className="w-full"
+                            inputProps={{ IconComponent: () => null }}
+                        >
+                            {yearList.map((year) =>(
+                                <MenuItem
+                                    key={year}
+                                    value={year.toString()}
+                                    selected={data.birthday_year === year.toString()}
+                                >
+                                    {year}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                    <FormControl variant="standard" sx={{ mt: 1, mr: 1, minWidth: 100 }}>
+                        <InputLabel id="month">月</InputLabel>
+                        <Select
+                            id="month"
+                            arrow=""
+                            name="birthday_month"
+                            value={data.birthday_month}
+                            label="年"
+                            error={errors.birthday}
+                            onChange={(e) => setData('birthday_month', e.target.value)}
+                            className="w-full"
+                            inputProps={{ IconComponent: () => null }}
+                        >
+                            {monthList.map((month) =>(
+                                <MenuItem
+                                    key={month}
+                                    value={month.toString()}
+                                    selected={data.birthday_month === month.toString()}
+                                >
+                                    {month}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                    <FormControl variant="standard" sx={{ mt: 1, mr: 1, minWidth: 100 }}>
+                        <InputLabel id="day">日</InputLabel>
+                        <Select
+                            id="day"
+                            arrow=""
+                            name="birthday_day"
+                            value={data.birthday_day}
+                            label="年"
+                            error={errors.birthday}
+                            onChange={(e) => setData('birthday_day', e.target.value)}
+                            className="w-full"
+                            inputProps={{ IconComponent: () => null }}
+                        >
+                            {dayList.map((day) =>(
+                                <MenuItem
+                                    key={day}
+                                    value={day.toString()}
+                                    selected={data.birthday_day === day.toString()}
+                                >
+                                    {day}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                    <InputError className="mt-2" message={errors.birthday} />
+                </div>
 
-                    <TextInput
+                <div>
+                    <TextField
                         id="email"
                         type="email"
-                        className="mt-1 block w-full"
+                        label="メールアドレス"
                         value={data.email}
+                        variant="standard"
+                        error={errors.email}
                         onChange={(e) => setData('email', e.target.value)}
+                        className="mt-1 block"
+                        autoComplete="off"
                         required
-                        autoComplete="username"
+                        fullWidth
                     />
-
                     <InputError className="mt-2" message={errors.email} />
                 </div>
 
@@ -85,15 +182,14 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                 )}
 
                 <div className="flex items-center gap-4">
-                    <PrimaryButton disabled={processing}>更新</PrimaryButton>
-
+                    {processing ? <Button disabled variant="contained">更新</Button> : <Button onClick={submit} variant="contained">更新</Button>}
                     <Transition
                         show={recentlySuccessful}
                         enterFrom="opacity-0"
                         leaveTo="opacity-0"
                         className="transition ease-in-out"
                     >
-                        <p className="text-sm text-gray-600">更新しました！</p>
+                        <p className="text-sm text-blue-600">更新しました！</p>
                     </Transition>
                 </div>
             </form>

@@ -4,11 +4,11 @@ import UpdatePasswordForm from './Partials/UpdatePasswordForm';
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm';
 import { Head } from '@inertiajs/react';
 
-export default function Edit({ auth, mustVerifyEmail, status }) {
+export default function Edit({ auth, birthdaySelectElement, mustVerifyEmail, status }) {
     return (
         <AuthenticatedLayout
             auth={auth}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">アカウント情報</h2>}
+            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">アカウント管理</h2>}
         >
             <Head title="Profile" />
 
@@ -18,6 +18,7 @@ export default function Edit({ auth, mustVerifyEmail, status }) {
                         <UpdateProfileInformationForm
                             mustVerifyEmail={mustVerifyEmail}
                             status={status}
+                            birthdaySelectElement={birthdaySelectElement}
                             className="max-w-xl"
                         />
                     </div>

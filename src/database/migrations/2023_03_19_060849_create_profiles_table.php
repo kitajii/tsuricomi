@@ -17,7 +17,9 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('name', 30);
-            $table->date('birthday')->nullable();
+            $table->unsignedInteger('birthday_year')->nullable();
+            $table->unsignedTinyInteger('birthday_month')->nullable();
+            $table->unsignedTinyInteger('birthday_day')->nullable();
             $table->string('icon_path')->nullable();
             $table->integer('experience')->nullable();
             $table->text('introduction')->nullable();
