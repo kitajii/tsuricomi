@@ -51,8 +51,8 @@ export default function Register() {
                     <Box component="form" className="mt-1 w-5/6" onSubmit={submit} noValidate>
                         <TextField
                             id="name"
-                            type="name"
                             label="アカウント名"
+                            name="name"
                             value={data.name}
                             variant="standard"
                             error={errors.name}
@@ -70,6 +70,7 @@ export default function Register() {
                             id="email"
                             type="email"
                             label="メールアドレス"
+                            name="email"
                             value={data.email}
                             variant="standard"
                             error={errors.email}
@@ -87,6 +88,7 @@ export default function Register() {
                             id="password"
                             type="password"
                             label="パスワード"
+                            name="password"
                             value={data.password}
                             variant="standard"
                             error={errors.password}
@@ -103,6 +105,7 @@ export default function Register() {
                             id="password_confirmation"
                             type="password"
                             label="パスワード（確認）"
+                            name="password_confirmation"
                             value={data.password_confirmation}
                             variant="standard"
                             error={errors.password_confirmation}
