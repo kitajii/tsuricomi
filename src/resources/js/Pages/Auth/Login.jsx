@@ -48,7 +48,7 @@ export default function Login({ status, canResetPassword }) {
                         ログイン
                     </Typography>
                     {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
-                    <Box component="form" onSubmit={submit} noValidate sx={{ mt: 1 }}>
+                    <Box component="form" className="mt-1 w-5/6" onSubmit={submit} noValidate sx={{ mt: 1 }}>
                         <TextField
                             id="email"
                             type="email"
@@ -66,7 +66,6 @@ export default function Login({ status, canResetPassword }) {
                             autoFocus
                         />
                         <InputError className="mt-2" message={errors.email} />
-
                         <TextField
                             id="password"
                             type="password"
