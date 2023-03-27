@@ -81,7 +81,6 @@ export default function Register() {
                             required
                             InputLabelProps={{ required: false }}
                             fullWidth
-                            autoFocus
                         />
                         <InputError className="mt-2" message={errors.email} />
                         <TextField

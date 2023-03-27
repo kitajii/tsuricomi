@@ -1,11 +1,11 @@
-import GuestLayout from '@/Layouts/GuestLayout';
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import InputError from '@/Components/InputError';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import { Head, useForm } from '@inertiajs/react';
+import { useForm } from '@inertiajs/react';
+import { Avatar, Box, Button, Container, createTheme, CssBaseline, Grid, Link, TextField, ThemeProvider, Typography } from '@mui/material';
+import { Transition } from '@headlessui/react';
 
 export default function ForgotPassword({ status }) {
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, post, processing, errors, recentlySuccessful } = useForm({
         email: '',
     });
 
@@ -19,36 +19,76 @@ export default function ForgotPassword({ status }) {
         post(route('password.email'));
     };
 
+    const theme = createTheme();
+
     return (
-        <GuestLayout>
-            <Head title="Forgot Password" />
-
-            <div className="mb-4 text-sm text-gray-600">
-                Forgot your password? No problem. Just let us know your email address and we will email you a password
-                reset link that will allow you to choose a new one.
-            </div>
-
-            {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
-
-            <form onSubmit={submit}>
-                <TextInput
-                    id="email"
-                    type="email"
-                    name="email"
-                    value={data.email}
-                    className="mt-1 block w-full"
-                    isFocused={true}
-                    onChange={onHandleChange}
-                />
-
-                <InputError message={errors.email} className="mt-2" />
-
-                <div className="flex items-center justify-end mt-4">
-                    <PrimaryButton className="ml-4" disabled={processing}>
-                        Email Password Reset Link
-                    </PrimaryButton>
-                </div>
-            </form>
-        </GuestLayout>
+        <ThemeProvider theme={theme}>
+            <Container component="main" maxWidth="xs">
+                <CssBaseline />
+                <Box
+                    sx={{
+                        marginTop: 8,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }}
+                >
+                    <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
+                        <HelpOutlineOutlinedIcon />
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        パスワードをお忘れの方
+                    </Typography>
+                    <Typography className="my-4 text-sm text-center">
+                        メールアドレスを入力し、再設定メールを送信してください。
+                        パスワード再設定ページへの案内メールをお送りします。
+                    </Typography>
+                    <Box component="form" className="mt-1 w-5/6" onSubmit={submit} noValidate>
+                        <TextField
+                            id="email"
+                            type="email"
+                            label="メールアドレス"
+                            value={data.email}
+                            variant="standard"
+                            error={errors.email}
+                            onChange={onHandleChange}
+                            className="mt-1 block"
+                            autoComplete="email"
+                            margin="normal"
+                            required
+                            InputLabelProps={{ required: false }}
+                            fullWidth
+                            autoFocus
+                        />
+                        <InputError className="mt-2" message={errors.email} />
+                        {processing ?
+                            <Button className="mt-3 mb-2" disabled variant="contained" fullWidth>メールを送信する</Button> :
+                            <Button className="mt-3 mb-2" onClick={submit} variant="contained" fullWidth>メールを送信する</Button>
+                        }
+                        <Transition
+                            show={recentlySuccessful}
+                            enterFrom="opacity-0"
+                            leaveTo="opacity-0"
+                            className="transition ease-in-out"
+                        >
+                            <p className="text-sm text-right text-blue-600">送信しました！</p>
+                        </Transition>
+                        <Grid container>
+                            <Grid item>
+                                <Link href={route('login')} variant="body2">
+                                    ログイン画面
+                                </Link>
+                            </Grid>
+                        </Grid>
+                    </Box>
+                </Box>
+                <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 8, mb: 4 }}>
+                    Copyright ©
+                    <Link color="inherit" href="">
+                        釣りコミ
+                    </Link> 2023.
+                </Typography>
+            </Container>
+        </ThemeProvider>
     );
 }
