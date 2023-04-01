@@ -7,7 +7,6 @@ import { Link } from '@inertiajs/react';
 
 export default function Authenticated({ auth, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
-
     return (
         <div className="min-h-screen bg-gray-100">
             <nav className="bg-white border-b border-gray-100">
@@ -22,7 +21,7 @@ export default function Authenticated({ auth, header, children }) {
 
                             <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink href={route('admin.dashboard')} active={route().current('admin.dashboard')}>
-                                    Dashboard
+                                    MAP
                                 </NavLink>
                             </div>
                         </div>
@@ -55,8 +54,9 @@ export default function Authenticated({ auth, header, children }) {
                                     </Dropdown.Trigger>
 
                                     <Dropdown.Content>
+                                        <Dropdown.Link href={route('admin.profile.edit')}>アカウント管理</Dropdown.Link>
                                         <Dropdown.Link href={route('admin.logout')} method="post" as="button">
-                                            Log Out
+                                            ログアウト
                                         </Dropdown.Link>
                                     </Dropdown.Content>
                                 </Dropdown>
@@ -99,9 +99,9 @@ export default function Authenticated({ auth, header, children }) {
                     <div className="pt-4 pb-1 border-t border-gray-200">
                         <div className="px-4">
                             <div className="font-medium text-base text-gray-800">
-                                {auth.user.name}
+                                {auth.name}
                             </div>
-                            <div className="font-medium text-sm text-gray-500">{auth.user.email}</div>
+                            <div className="font-medium text-sm text-gray-500">{auth.email}</div>
                         </div>
 
                         <div className="mt-3 space-y-1">

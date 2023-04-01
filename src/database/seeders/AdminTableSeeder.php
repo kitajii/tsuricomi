@@ -4,8 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\Admin;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class AdminTableSeeder extends Seeder
 {
@@ -22,7 +22,7 @@ class AdminTableSeeder extends Seeder
         $Admins = [
             [
                 'email' => 'kazu.rmcf@gmail.com',
-                'password' => Crypt::encrypt('password'),
+                'password' => Hash::make('password'),
             ],
         ];
 

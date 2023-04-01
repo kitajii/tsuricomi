@@ -1,11 +1,8 @@
 import { useEffect } from 'react';
-import Checkbox from '@/Components/Checkbox';
-import GuestLayout from '@/Layouts/GuestLayout';
 import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { useForm } from '@inertiajs/react';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { Avatar, Box, Button, Checkbox, Container, createTheme, CssBaseline, FormControlLabel, Grid, Link, TextField, ThemeProvider, Typography } from '@mui/material';
 
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -30,68 +27,85 @@ export default function Login({ status, canResetPassword }) {
         post(route('admin.login'));
     };
 
+    const theme = createTheme();
+
     return (
-        <GuestLayout>
-            <Head title="Log in" />
-
-            {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
-
-            <form onSubmit={submit}>
-                <div>
-                    <InputLabel htmlFor="email" value="Email" />
-
-                    <TextInput
-                        id="email"
-                        type="email"
-                        name="email"
-                        value={data.email}
-                        className="mt-1 block w-full"
-                        autoComplete="username"
-                        isFocused={true}
-                        onChange={handleOnChange}
-                    />
-
-                    <InputError message={errors.email} className="mt-2" />
-                </div>
-
-                <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
-
-                    <TextInput
-                        id="password"
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="current-password"
-                        onChange={handleOnChange}
-                    />
-
-                    <InputError message={errors.password} className="mt-2" />
-                </div>
-
-                <div className="block mt-4">
-                    <label className="flex items-center">
-                        <Checkbox name="remember" value={data.remember} onChange={handleOnChange} />
-                        <span className="ml-2 text-sm text-gray-600">Remember me</span>
-                    </label>
-                </div>
-
-                <div className="flex items-center justify-end mt-4">
-                    {canResetPassword && (
-                        <Link
-                            href={route('admin.password.request')}
-                            className="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                        >
-                            Forgot your password?
-                        </Link>
-                    )}
-
-                    <PrimaryButton className="ml-4" disabled={processing}>
-                        Log in
-                    </PrimaryButton>
-                </div>
-            </form>
-        </GuestLayout>
+        <ThemeProvider theme={theme}>
+            <Container component="main" maxWidth="xs">
+                <CssBaseline />
+                <Box
+                    sx={{
+                        marginTop: 8,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }}
+                >
+                    <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
+                        <LockOutlinedIcon />
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        管理者ログイン
+                    </Typography>
+                    {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
+                    <Box component="form" className="mt-1 w-5/6" onSubmit={submit} noValidate sx={{ mt: 1 }}>
+                        <TextField
+                            id="email"
+                            type="email"
+                            label="メールアドレス"
+                            value={data.email}
+                            variant="standard"
+                            error={errors.email}
+                            onChange={(e) => setData('email', e.target.value)}
+                            className="mt-1 block"
+                            autoComplete="email"
+                            margin="normal"
+                            required
+                            InputLabelProps={{ required: false }}
+                            fullWidth
+                            autoFocus
+                        />
+                        <InputError className="mt-2" message={errors.email} />
+                        <TextField
+                            id="password"
+                            type="password"
+                            label="パスワード"
+                            value={data.password}
+                            variant="standard"
+                            error={errors.password}
+                            onChange={(e) => setData('password', e.target.value)}
+                            className="mt-1 block"
+                            autoComplete="current-password"
+                            margin="normal"
+                            required
+                            InputLabelProps={{ required: false }}
+                            fullWidth
+                        />
+                        <InputError className="mt-2" message={errors.password} />
+                        <FormControlLabel
+                            control={<Checkbox name="remember" value={data.remember} onChange={handleOnChange} />}
+                            label="ログイン状態を保存"
+                        />
+                        {processing ?
+                            <Button className="mt-3 mb-2" disabled variant="contained" fullWidth>ログイン</Button> :
+                            <Button className="mt-3 mb-2" onClick={submit} variant="contained" fullWidth>ログイン</Button>
+                        }
+                        <Grid container>
+                            <Grid item xs>
+                                <Link href={route('login')} variant="body2">
+                                    ユーザーログイン画面へ
+                                </Link>
+                            </Grid>
+                        </Grid>
+                    </Box>
+                </Box>
+                <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 8, mb: 4 }}>
+                    Copyright ©
+                    <Link color="inherit" href="">
+                        釣りコミ
+                    </Link> 2023.
+                </Typography>
+            </Container>
+        </ThemeProvider>
     );
 }
