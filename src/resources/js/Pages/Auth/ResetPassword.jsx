@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import InputError from '@/Components/InputError';
-import { useForm } from '@inertiajs/react';
+import { Head, useForm } from '@inertiajs/react';
 import LockResetOutlinedIcon from '@mui/icons-material/LockResetOutlined';
 import { Avatar, Box, Button, Container, createTheme, CssBaseline, Link, TextField, ThemeProvider, Typography } from '@mui/material';
 
@@ -32,6 +32,7 @@ export default function ResetPassword({ token, email }) {
 
     return (
         <ThemeProvider theme={theme}>
+            <Head title="パスワード再設定" />
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box

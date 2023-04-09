@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import InputError from '@/Components/InputError';
-import { useForm } from '@inertiajs/react';
+import { Head, useForm } from '@inertiajs/react';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Avatar, Box, Button, Checkbox, Container, createTheme, CssBaseline, FormControlLabel, Grid, Link, TextField, ThemeProvider, Typography } from '@mui/material';
 
@@ -31,6 +31,7 @@ export default function Login({ status, canResetPassword }) {
 
     return (
         <ThemeProvider theme={theme}>
+            <Head title="ログイン" />
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box
@@ -88,7 +89,7 @@ export default function Login({ status, canResetPassword }) {
                         />
                         {processing ?
                             <Button className="mt-3 mb-2" disabled variant="contained" fullWidth>ログイン</Button> :
-                            <Button className="mt-3 mb-2" onClick={submit} variant="contained" fullWidth>ログイン</Button>
+                            <Button className="mt-3 mb-2" type="submit" onClick={submit} variant="contained" fullWidth>ログイン</Button>
                         }
                         <Grid container>
                             <Grid item xs>

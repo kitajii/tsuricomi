@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import InputError from '@/Components/InputError';
-import { useForm } from '@inertiajs/react';
+import { Head, useForm } from '@inertiajs/react';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import { Avatar, Box, Button, Container, createTheme, CssBaseline, Grid, Link, TextField, ThemeProvider, Typography } from '@mui/material';
 
@@ -32,6 +32,7 @@ export default function Register() {
 
     return (
         <ThemeProvider theme={theme}>
+            <Head title="アカウント登録" />
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box

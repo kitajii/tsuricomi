@@ -1,6 +1,6 @@
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import InputError from '@/Components/InputError';
-import { useForm } from '@inertiajs/react';
+import { Head, useForm } from '@inertiajs/react';
 import { Avatar, Box, Button, Container, createTheme, CssBaseline, Grid, Link, TextField, ThemeProvider, Typography } from '@mui/material';
 import { Transition } from '@headlessui/react';
 
@@ -23,6 +23,7 @@ export default function ForgotPassword({ status }) {
 
     return (
         <ThemeProvider theme={theme}>
+            <Head title="パスワード再設定" />
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box
