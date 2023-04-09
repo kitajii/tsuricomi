@@ -89,7 +89,7 @@ export default function UpdatePasswordForm({ className }) {
                     <InputError className="mt-2" message={errors.password_confirmation} />
                 </div>
                 <div className="flex items-center gap-4">
-                    {processing ? <Button disabled variant="contained">更新</Button> : <Button onClick={updatePassword} variant="contained">更新</Button>}
+                    {processing ? <Button disabled variant="contained">更新</Button> : <Button type="submit" onClick={updatePassword} variant="contained">更新</Button>}
                     <Transition
                         show={recentlySuccessful}
                         enterFrom="opacity-0"

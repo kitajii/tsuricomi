@@ -253,7 +253,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, birt
                     />
                 </div>
                 <div className="flex items-center gap-4">
-                    {processing ? <Button disabled variant="contained">更新</Button> : <Button onClick={submit} variant="contained">更新</Button>}
+                    {processing ? <Button disabled variant="contained">更新</Button> : <Button type="submit" onClick={submit} variant="contained">更新</Button>}
                     <Transition
                         show={recentlySuccessful}
                         enterFrom="opacity-0"
