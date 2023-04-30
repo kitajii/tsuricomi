@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Libs\Util;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -24,4 +25,16 @@ class Profile extends Model
         'experience',
         'introduction',
     ];
+
+    public function saveIcon($icon)
+    {
+        $filePath = storage_path('app/icon/' . $this->id . '/');
+        if (!isset($this->icon)) Util::deleteFile($filePath, 'icon');
+        if (isset($icon)) {
+            $fileName = 'icon.' . $icon->getClientOriginalExtension();
+            $icon->move($filePath, $fileName);
+        }
+        $this->icon_path = $fileName;
+        $this->save();
+    }
 }

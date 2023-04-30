@@ -26,6 +26,7 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
+Route::get('profile/get-icon/{id}/{file_name}/', [ProfileController::class, 'getIcon'])->whereNumber('id'); //アイコン画像取得
 
 // ユーザー
 Route::get('/dashboard', function () {
@@ -36,6 +37,7 @@ Route::get('/dashboard', function () {
 Route::middleware(['auth:user', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile/icon-update', [ProfileController::class, 'iconUpdate'])->name('profile.icon-update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 require __DIR__.'/auth.php';

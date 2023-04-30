@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\IconUpdateRequest;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Libs\Util;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -25,6 +29,8 @@ class ProfileController extends Controller
         $monthList = Util::getSelectNum(1, 12);
         $dayList = Util::getSelectNum(1, 31);
 
+        $iconUrl = isset($auth->profile->icon_path) ? url('profile/get-icon/'. $auth->profile->id . '/' . $auth->profile->icon_path . '/') : null;
+
         return Inertia::render('Profile/Edit', [
             'auth' => $auth,
             'birthdaySelectElement' => [
@@ -33,6 +39,7 @@ class ProfileController extends Controller
                 'dayList' => $dayList,
             ],
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
+            'iconUrl' => $iconUrl,
             'status' => session('status'),
         ]);
     }
@@ -71,6 +78,25 @@ class ProfileController extends Controller
     }
 
     /**
+     * Update the user's profile icon.
+     */
+    public function IconUpdate(IconUpdateRequest $request): RedirectResponse
+    {
+        $profile = $request->user()->profile;
+        DB::beginTransaction();
+        try {
+        $profile->saveIcon($request->file('icon'));
+            DB::commit();
+        } catch (\Exception $e) {
+            Log::error($e);
+            DB::rollBack();
+            throw $e;
+        }
+        return Redirect::route('profile.edit');
+    }
+
+
+    /**
      * Delete the user's account.
      */
     public function destroy(Request $request): RedirectResponse
@@ -89,5 +115,28 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+    /**
+     * アイコン画像取得
+     *
+     * @param integer $id
+     * @param string $filename
+     * @return void
+     */
+    public function getIcon($id, $fileName)
+    {
+        // $myId = Auth::user()->id;
+        // ボートIDに紐づくショップが存在しない、または、ボートIDが他ショップのボートだった場合404
+        $filepath = 'icon/' . $id . '/' . $fileName;
+        // ファイルがない場合404
+        if (!Storage::exists($filepath)) {
+            return abort(404);
+        }
+        $image = Storage::get($filepath);
+        return response()->make($image, 200, [
+            'Content-Type'        => Storage::mimeType($filepath),
+            'Content-Disposition' => 'inline; filename="' . $filepath . '"'
+        ]);
     }
 }

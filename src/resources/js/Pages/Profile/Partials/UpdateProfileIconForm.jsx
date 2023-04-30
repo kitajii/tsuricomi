@@ -1,23 +1,32 @@
-import { useForm, usePage } from '@inertiajs/react';
-import { Transition } from '@headlessui/react';
-import { Button } from '@mui/material';
-import CropIconImage from './CropIconImage';
+import { router, useForm, usePage } from "@inertiajs/react";
+import { Transition } from "@headlessui/react";
+import { Button } from "@mui/material";
+import CropIconImage from "./CropIconImage";
 
-export default function UpdateProfileIconForm({ className }) {
+export default function UpdateProfileIconForm({ iconUrl, className }) {
     const user = usePage().props.auth;
-
-    const { data, setData, patch, progress, errors, processing, recentlySuccessful } = useForm({
+    console.log(iconUrl);
+    const {
+        data,
+        setData,
+        patch,
+        progress,
+        errors,
+        processing,
+        recentlySuccessful,
+    } = useForm({
         icon: null,
     });
 
     /**
      * 更新処理
-     * @param {event} e 
+     * @param {event} e
      */
     const submit = (e) => {
         e.preventDefault();
-
-        patch(route('profile.icon-upload'));
+        router.post(route("profile.icon-update"), data, {
+            forceFormData: true,
+        });
     };
 
     return (
@@ -29,10 +38,26 @@ export default function UpdateProfileIconForm({ className }) {
                     アイコン画像を更新できます。
                 </p>
             </header>
-            <form onSubmit={submit} className="mt-6 space-y-6">
-                <CropIconImage />
+            <form
+                onSubmit={submit}
+                className="mt-6 space-y-6"
+                enctype="multipart/form-data"
+            >
+                <CropIconImage setData={setData} iconUrl={iconUrl} />
                 <div className="flex items-center gap-4">
-                    {processing ? <Button disabled variant="contained">更新</Button> : <Button type="submit" onClick={submit} variant="contained">更新</Button>}
+                    {processing ? (
+                        <Button disabled variant="contained">
+                            更新
+                        </Button>
+                    ) : (
+                        <Button
+                            type="submit"
+                            onClick={submit}
+                            variant="contained"
+                        >
+                            更新
+                        </Button>
+                    )}
                     <Transition
                         show={recentlySuccessful}
                         enterFrom="opacity-0"
