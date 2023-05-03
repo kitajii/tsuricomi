@@ -29,10 +29,10 @@ Route::get('/', function () {
 Route::get('profile/get-icon/{id}/{file_name}/', [ProfileController::class, 'getIcon'])->whereNumber('id'); //アイコン画像取得
 
 // ユーザー
-Route::get('/dashboard', function () {
+Route::get('/map', function () {
     $auth = Auth::user()->load('profile');
-    return Inertia::render('Dashboard', ['auth' => $auth]);
-})->middleware(['auth', 'verified'])->name('dashboard');
+    return Inertia::render('Map', ['auth' => $auth]);
+})->middleware(['auth', 'verified'])->name('map');
 
 Route::middleware(['auth:user', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -44,9 +44,9 @@ require __DIR__.'/auth.php';
 
 // 管理者
 Route::prefix('admin')->middleware(['auth:admin', 'verified'])->name('admin.')->group(function(){
-    Route::get('/dashboard', function () {
-        return Inertia::render('Admin/Dashboard');
-    })->name('dashboard');
+    Route::get('/map', function () {
+        return Inertia::render('Admin/Map');
+    })->name('map');
 
     Route::get('/profile', [AdminProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [AdminProfileController::class, 'update'])->name('profile.update');

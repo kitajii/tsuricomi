@@ -1,26 +1,39 @@
-import InputError from '@/Components/InputError';
-import Label from '@/Components/InputLabel';
-import { Link, useForm, usePage } from '@inertiajs/react';
-import { Transition } from '@headlessui/react';
-import TextField from '@mui/material/TextField';
-import { useEffect, useState } from 'react';
-import { Button, FormControl, InputAdornment, InputLabel, MenuItem, Select } from '@mui/material';
+import InputError from "@/Components/InputError";
+import Label from "@/Components/InputLabel";
+import { Link, useForm, usePage } from "@inertiajs/react";
+import { Transition } from "@headlessui/react";
+import TextField from "@mui/material/TextField";
+import { useEffect, useState } from "react";
+import {
+    Button,
+    FormControl,
+    InputAdornment,
+    InputLabel,
+    MenuItem,
+    Select,
+} from "@mui/material";
 
-export default function UpdateProfileInformation({ mustVerifyEmail, status, birthdaySelectElement, className }) {
+export default function UpdateProfileInformation({
+    mustVerifyEmail,
+    status,
+    birthdaySelectElement,
+    className,
+}) {
     const user = usePage().props.auth;
     const [yearList, setYearList] = useState([]);
     const [monthList, setMonthList] = useState([]);
     const [dayList, setDayList] = useState([]);
 
-    const { data, setData, patch, errors, processing, recentlySuccessful } = useForm({
-        name: user.profile.name,
-        email: user.email,
-        birthday_year: user.profile.birthday_year,
-        birthday_month: user.profile.birthday_month,
-        birthday_day: user.profile.birthday_day,
-        experience: user.profile.experience,
-        introduction: user.profile.introduction,
-    });
+    const { data, setData, patch, errors, processing, recentlySuccessful } =
+        useForm({
+            name: user.profile.name,
+            email: user.email,
+            birthday_year: user.profile.birthday_year,
+            birthday_month: user.profile.birthday_month,
+            birthday_day: user.profile.birthday_day,
+            experience: user.profile.experience,
+            introduction: user.profile.introduction,
+        });
 
     /**
      * 生年月日のセレクト生成
@@ -34,44 +47,47 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, birt
     /**
      * 釣り歴の入力禁止文字
      * 入力をonKeyDownで判定し、該当すれば入力イベント発火しない
-     * @param {event} e 
-     * @returns 
+     * @param {event} e
+     * @returns
      */
-    const blockInvalidChar = e => ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault();
+    const blockInvalidChar = (e) =>
+        ["e", "E", "+", "-"].includes(e.key) && e.preventDefault();
 
     /**
      * 釣り歴のフォーマットチェック
-     * @param {event} e 
+     * @param {event} e
      */
     const changeExperience = (e) => {
         var experience = null;
-        if(e.target.value.match("^[0-9]{1,2}$")) {
+        if (e.target.value.match("^[0-9]{1,2}$")) {
             experience = e.target.value;
         } else {
             // 0〜99以外の場合は元の値に戻す
             experience = data.experience;
         }
         // 値が空文字の場合はnullに変換
-        if (e.target.value === '') {
+        if (e.target.value === "") {
             experience = null;
         }
-        setData('experience', experience);
-    }
+        setData("experience", experience);
+    };
 
     /**
      * 更新処理
-     * @param {event} e 
+     * @param {event} e
      */
     const submit = (e) => {
         e.preventDefault();
 
-        patch(route('profile.update'));
+        patch(route("profile.update"));
     };
 
     return (
         <section className={className}>
             <header>
-                <h2 className="text-lg font-medium text-gray-900">プロフィール</h2>
+                <h2 className="text-lg font-medium text-gray-900">
+                    プロフィール
+                </h2>
 
                 <p className="mt-1 text-sm text-gray-600">
                     プロフィール情報を更新できます。
@@ -86,7 +102,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, birt
                         value={data.name}
                         variant="standard"
                         error={errors.name}
-                        onChange={(e) => setData('name', e.target.value)}
+                        onChange={(e) => setData("name", e.target.value)}
                         className="block"
                         autoComplete="off"
                         required
@@ -103,7 +119,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, birt
                         value={data.email}
                         variant="standard"
                         error={errors.email}
-                        onChange={(e) => setData('email', e.target.value)}
+                        onChange={(e) => setData("email", e.target.value)}
                         className="mt-1 block"
                         autoComplete="off"
                         required
@@ -116,7 +132,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, birt
                         <p className="text-sm mt-2 text-gray-800">
                             メールアドレスの確認を行なってください
                             <Link
-                                href={route('verification.send')}
+                                href={route("verification.send")}
                                 method="post"
                                 as="button"
                                 className="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -125,7 +141,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, birt
                             </Link>
                         </p>
 
-                        {status === 'verification-link-sent' && (
+                        {status === "verification-link-sent" && (
                             <div className="mt-2 font-medium text-sm text-blue-600">
                                 確認リンクがメールアドレスに送信されました。
                             </div>
@@ -133,8 +149,15 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, birt
                     </div>
                 )}
                 <div>
-                    <Label className="text-[12px] text-gray-600" htmlFor="birthday" value="生年月日" />
-                    <FormControl variant="standard" sx={{ mt: 1, mr: 1, minWidth: 100 }}>
+                    <Label
+                        className="text-[12px] text-gray-600"
+                        htmlFor="birthday"
+                        value="生年月日"
+                    />
+                    <FormControl
+                        variant="standard"
+                        sx={{ mt: 1, mr: 1, minWidth: 100 }}
+                    >
                         <InputLabel id="year">年</InputLabel>
                         <Select
                             id="year"
@@ -143,22 +166,29 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, birt
                             value={data.birthday_year}
                             label="年"
                             error={errors.birthday}
-                            onChange={(e) => setData('birthday_year', e.target.value)}
+                            onChange={(e) =>
+                                setData("birthday_year", e.target.value)
+                            }
                             className="w-full"
                             inputProps={{ IconComponent: () => null }}
                         >
-                            {yearList.map((year) =>(
+                            {yearList.map((year) => (
                                 <MenuItem
                                     key={year}
                                     value={year.toString()}
-                                    selected={data.birthday_year === year.toString()}
+                                    selected={
+                                        data.birthday_year === year.toString()
+                                    }
                                 >
                                     {year}
                                 </MenuItem>
                             ))}
                         </Select>
                     </FormControl>
-                    <FormControl variant="standard" sx={{ mt: 1, mr: 1, minWidth: 100 }}>
+                    <FormControl
+                        variant="standard"
+                        sx={{ mt: 1, mr: 1, minWidth: 100 }}
+                    >
                         <InputLabel id="month">月</InputLabel>
                         <Select
                             id="month"
@@ -167,22 +197,29 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, birt
                             value={data.birthday_month}
                             label="年"
                             error={errors.birthday}
-                            onChange={(e) => setData('birthday_month', e.target.value)}
+                            onChange={(e) =>
+                                setData("birthday_month", e.target.value)
+                            }
                             className="w-full"
                             inputProps={{ IconComponent: () => null }}
                         >
-                            {monthList.map((month) =>(
+                            {monthList.map((month) => (
                                 <MenuItem
                                     key={month}
                                     value={month.toString()}
-                                    selected={data.birthday_month === month.toString()}
+                                    selected={
+                                        data.birthday_month === month.toString()
+                                    }
                                 >
                                     {month}
                                 </MenuItem>
                             ))}
                         </Select>
                     </FormControl>
-                    <FormControl variant="standard" sx={{ mt: 1, mr: 1, minWidth: 100 }}>
+                    <FormControl
+                        variant="standard"
+                        sx={{ mt: 1, mr: 1, minWidth: 100 }}
+                    >
                         <InputLabel id="day">日</InputLabel>
                         <Select
                             id="day"
@@ -191,15 +228,19 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, birt
                             value={data.birthday_day}
                             label="年"
                             error={errors.birthday}
-                            onChange={(e) => setData('birthday_day', e.target.value)}
+                            onChange={(e) =>
+                                setData("birthday_day", e.target.value)
+                            }
                             className="w-full"
                             inputProps={{ IconComponent: () => null }}
                         >
-                            {dayList.map((day) =>(
+                            {dayList.map((day) => (
                                 <MenuItem
                                     key={day}
                                     value={day.toString()}
-                                    selected={data.birthday_day === day.toString()}
+                                    selected={
+                                        data.birthday_day === day.toString()
+                                    }
                                 >
                                     {day}
                                 </MenuItem>
@@ -209,7 +250,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, birt
                     <InputError className="mt-2" message={errors.birthday} />
                 </div>
                 <div>
-                    <FormControl variant="standard" sx={{  minWidth: 100 }}>
+                    <FormControl variant="standard" sx={{ minWidth: 100 }}>
                         <TextField
                             id="experience"
                             label="釣り歴"
@@ -225,14 +266,21 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, birt
                             fullWidth
                             InputProps={{
                                 // shrink: true,
-                                endAdornment: <InputAdornment position="end">年</InputAdornment>,
-                                inputProps:{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        年
+                                    </InputAdornment>
+                                ),
+                                inputProps: {
                                     min: 0,
                                     max: 99,
-                                }
+                                },
                             }}
                         />
-                        <InputError className="mt-2" message={errors.experience} />
+                        <InputError
+                            className="mt-2"
+                            message={errors.experience}
+                        />
                     </FormControl>
                 </div>
                 <div>
@@ -245,7 +293,9 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, birt
                         value={data.introduction}
                         variant="standard"
                         error={errors.introduction}
-                        onChange={(e) => setData('introduction', e.target.value)}
+                        onChange={(e) =>
+                            setData("introduction", e.target.value)
+                        }
                         autoComplete="off"
                         rows={4}
                         multiline
@@ -253,7 +303,19 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, birt
                     />
                 </div>
                 <div className="flex items-center gap-4">
-                    {processing ? <Button disabled variant="contained">更新</Button> : <Button type="submit" onClick={submit} variant="contained">更新</Button>}
+                    {processing ? (
+                        <Button disabled variant="contained">
+                            更新
+                        </Button>
+                    ) : (
+                        <Button
+                            type="submit"
+                            onClick={submit}
+                            variant="contained"
+                        >
+                            更新
+                        </Button>
+                    )}
                     <Transition
                         show={recentlySuccessful}
                         enterFrom="opacity-0"
