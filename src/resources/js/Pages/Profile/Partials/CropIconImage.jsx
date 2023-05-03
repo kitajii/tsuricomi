@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import CropperModal from "../../../Components/CropImageModal/CropperModal";
 import { Button } from "@mui/material";
 import getCroppedImg from "../../../Components/CropImageModal/getCroppedImg";
+import InputError from "@/Components/InputError";
 export const ASPECT_RATIO = 6 / 6;
 export const CROP_WIDTH = 300;
 
@@ -29,12 +30,25 @@ const CropIconImage = (props) => {
 
     const [originalFile, setOriginalFile] = useState(null);
 
+    const ARROW_MIME_TYPE = ["image/jpeg", "image/png"];
+
     /**
      * ファイルアップロード後
      * 画像ファイルのURLをセットしモーダルを表示する
      */
     const onFileChange = useCallback(async (e) => {
         if (e.target.files && e.target.files.length > 0) {
+            // 拡張子チェック
+            var fileMimeType = e.target.files[0].type;
+            if (!ARROW_MIME_TYPE.includes(fileMimeType)) {
+                props.clearErrors("icon");
+                props.setError(
+                    "icon",
+                    "jpg,jpeg,pngの画像のみアップロード可能です。"
+                );
+                return;
+            }
+            props.clearErrors("icon");
             const reader = new FileReader();
             reader.addEventListener("load", () => {
                 if (reader.result) {
@@ -103,8 +117,14 @@ const CropIconImage = (props) => {
             <div className="mt-6">
                 <Button variant="contained" component="label">
                     画像を選択
-                    <input type="file" hidden onChange={onFileChange} />
+                    <input
+                        type="file"
+                        name="icon"
+                        hidden
+                        onChange={onFileChange}
+                    />
                 </Button>
+                <InputError className="mt-2" message={props.errors.icon} />
             </div>
             <div className="mt-3 w-[300px] h-[300px] flex items-center rounded-lg overflow-hidden bg-gray-300">
                 {croppedImgSrc ? (

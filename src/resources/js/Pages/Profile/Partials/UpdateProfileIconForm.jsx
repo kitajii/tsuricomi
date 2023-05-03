@@ -5,13 +5,14 @@ import CropIconImage from "./CropIconImage";
 
 export default function UpdateProfileIconForm({ iconUrl, className }) {
     const user = usePage().props.auth;
-    console.log(iconUrl);
     const {
         data,
         setData,
-        patch,
+        post,
         progress,
         errors,
+        setError,
+        clearErrors,
         processing,
         recentlySuccessful,
     } = useForm({
@@ -24,7 +25,7 @@ export default function UpdateProfileIconForm({ iconUrl, className }) {
      */
     const submit = (e) => {
         e.preventDefault();
-        router.post(route("profile.icon-update"), data, {
+        post(route("profile.icon-update"), {
             forceFormData: true,
         });
     };
@@ -41,9 +42,15 @@ export default function UpdateProfileIconForm({ iconUrl, className }) {
             <form
                 onSubmit={submit}
                 className="mt-6 space-y-6"
-                enctype="multipart/form-data"
+                encType="multipart/form-data"
             >
-                <CropIconImage setData={setData} iconUrl={iconUrl} />
+                <CropIconImage
+                    setData={setData}
+                    iconUrl={iconUrl}
+                    errors={errors}
+                    setError={setError}
+                    clearErrors={clearErrors}
+                />
                 <div className="flex items-center gap-4">
                     {processing ? (
                         <Button disabled variant="contained">

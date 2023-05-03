@@ -14,7 +14,7 @@ class IconUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'icon' => ['required', 'mimes:jpg,jpeg,png', 'max:10240'],
+            'icon' => ['required', 'file', 'mimes:jpg,jpeg,png', 'max:10240'],
         ];
     }
 }
