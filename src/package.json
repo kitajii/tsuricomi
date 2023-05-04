@@ -25,6 +25,7 @@
         "@emotion/styled": "^11.10.6",
         "@mui/icons-material": "^5.11.11",
         "@mui/material": "^5.11.14",
+        "@react-google-maps/api": "^2.18.1",
         "react-easy-crop": "^4.7.4",
         "react-icons": "^4.8.0"
     }

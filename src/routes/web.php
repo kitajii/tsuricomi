@@ -31,7 +31,7 @@ Route::get('profile/get-icon/{id}/{file_name}/', [ProfileController::class, 'get
 // ユーザー
 Route::get('/map', function () {
     $auth = Auth::user()->load('profile');
-    return Inertia::render('Map', ['auth' => $auth]);
+    return Inertia::render('Map/MapPage', ['auth' => $auth]);
 })->middleware(['auth', 'verified'])->name('map');
 
 Route::middleware(['auth:user', 'verified'])->group(function () {
@@ -45,7 +45,7 @@ require __DIR__.'/auth.php';
 // 管理者
 Route::prefix('admin')->middleware(['auth:admin', 'verified'])->name('admin.')->group(function(){
     Route::get('/map', function () {
-        return Inertia::render('Admin/Map');
+        return Inertia::render('Admin/Map/MapPage');
     })->name('map');
 
     Route::get('/profile', [AdminProfileController::class, 'edit'])->name('profile.edit');
