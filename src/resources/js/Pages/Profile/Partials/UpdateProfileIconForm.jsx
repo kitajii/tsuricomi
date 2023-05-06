@@ -1,4 +1,4 @@
-import { router, useForm, usePage } from "@inertiajs/react";
+import { useForm, usePage } from "@inertiajs/react";
 import { Transition } from "@headlessui/react";
 import { Button } from "@mui/material";
 import CropIconImage from "./CropIconImage";

@@ -1,33 +1,41 @@
-import { useRef } from 'react';
-import InputError from '@/Components/InputError';
-import { useForm } from '@inertiajs/react';
-import { Transition } from '@headlessui/react';
-import { Button, TextField } from '@mui/material';
+import { useRef } from "react";
+import InputError from "@/Components/InputError";
+import { useForm } from "@inertiajs/react";
+import { Transition } from "@headlessui/react";
+import { Button, TextField } from "@mui/material";
 
 export default function UpdatePasswordForm({ className }) {
     const passwordInput = useRef();
     const currentPasswordInput = useRef();
 
-    const { data, setData, errors, put, reset, processing, recentlySuccessful } = useForm({
-        current_password: '',
-        password: '',
-        password_confirmation: '',
+    const {
+        data,
+        setData,
+        errors,
+        put,
+        reset,
+        processing,
+        recentlySuccessful,
+    } = useForm({
+        current_password: "",
+        password: "",
+        password_confirmation: "",
     });
 
     const updatePassword = (e) => {
         e.preventDefault();
 
-        put(route('admin.password.update'), {
+        put(route("admin.password.update"), {
             preserveScroll: true,
             onSuccess: () => reset(),
             onError: () => {
                 if (errors.password) {
-                    reset('password', 'password_confirmation');
+                    reset("password", "password_confirmation");
                     passwordInput.current.focus();
                 }
 
                 if (errors.current_password) {
-                    reset('current_password');
+                    reset("current_password");
                     currentPasswordInput.current.focus();
                 }
             },
@@ -37,7 +45,9 @@ export default function UpdatePasswordForm({ className }) {
     return (
         <section className={className}>
             <header>
-                <h2 className="text-lg font-medium text-gray-900">パスワード更新</h2>
+                <h2 className="text-lg font-medium text-gray-900">
+                    パスワード更新
+                </h2>
             </header>
             <form onSubmit={updatePassword} className="mt-6 space-y-6">
                 <div>
@@ -49,12 +59,17 @@ export default function UpdatePasswordForm({ className }) {
                         value={data.current_password}
                         variant="standard"
                         error={errors.current_password}
-                        onChange={(e) => setData('current_password', e.target.value)}
+                        onChange={(e) =>
+                            setData("current_password", e.target.value)
+                        }
                         autoComplete="off"
                         required
                         fullWidth
                     />
-                    <InputError className="mt-2" message={errors.current_password} />
+                    <InputError
+                        className="mt-2"
+                        message={errors.current_password}
+                    />
                 </div>
                 <div>
                     <TextField
@@ -65,7 +80,7 @@ export default function UpdatePasswordForm({ className }) {
                         value={data.password}
                         variant="standard"
                         error={errors.password}
-                        onChange={(e) => setData('password', e.target.value)}
+                        onChange={(e) => setData("password", e.target.value)}
                         autoComplete="off"
                         required
                         fullWidth
@@ -81,15 +96,32 @@ export default function UpdatePasswordForm({ className }) {
                         value={data.password_confirmation}
                         variant="standard"
                         error={errors.password_confirmation}
-                        onChange={(e) => setData('password_confirmation', e.target.value)}
+                        onChange={(e) =>
+                            setData("password_confirmation", e.target.value)
+                        }
                         autoComplete="off"
                         required
                         fullWidth
                     />
-                    <InputError className="mt-2" message={errors.password_confirmation} />
+                    <InputError
+                        className="mt-2"
+                        message={errors.password_confirmation}
+                    />
                 </div>
                 <div className="flex items-center gap-4">
-                    {processing ? <Button disabled variant="contained">更新</Button> : <Button type="submit" onClick={updatePassword} variant="contained">更新</Button>}
+                    {processing ? (
+                        <Button disabled variant="contained">
+                            更新
+                        </Button>
+                    ) : (
+                        <Button
+                            type="submit"
+                            onClick={updatePassword}
+                            variant="contained"
+                        >
+                            更新
+                        </Button>
+                    )}
                     <Transition
                         show={recentlySuccessful}
                         enterFrom="opacity-0"
