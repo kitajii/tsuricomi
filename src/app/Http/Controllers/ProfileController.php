@@ -126,7 +126,6 @@ class ProfileController extends Controller
      */
     public function getIcon($id, $fileName)
     {
-        // ボートIDに紐づくショップが存在しない、または、ボートIDが他ショップのボートだった場合404
         $filepath = 'icon/' . $id . '/' . $fileName;
         // ファイルがない場合404
         if (!Storage::exists($filepath)) {
