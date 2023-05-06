@@ -2,8 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
+use App\Http\Controllers\MapController;
 use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -29,12 +29,9 @@ Route::get('/', function () {
 Route::get('profile/get-icon/{id}/{file_name}/', [ProfileController::class, 'getIcon'])->whereNumber('id'); //アイコン画像取得
 
 // ユーザー
-Route::get('/map', function () {
-    $auth = Auth::user()->load('profile');
-    return Inertia::render('Map/MapPage', ['auth' => $auth]);
-})->middleware(['auth', 'verified'])->name('map');
-
 Route::middleware(['auth:user', 'verified'])->group(function () {
+    Route::get('/map', [MapController::class, 'map'])->name('map');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/icon-update', [ProfileController::class, 'iconUpdate'])->name('profile.icon-update');

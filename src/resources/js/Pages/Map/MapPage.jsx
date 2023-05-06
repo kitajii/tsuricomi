@@ -3,12 +3,14 @@ import { Head } from "@inertiajs/react";
 import { useLoadScript } from "@react-google-maps/api";
 import { useEffect, useState } from "react";
 import Map from "./Map";
+import { CircularProgress } from "@mui/material";
 
 export default function MapPage(props) {
     const { isLoaded } = useLoadScript({
         googleMapsApiKey: import.meta.env.VITE_APP_GOOGLE_MAPS_API_KEY,
     });
-    const [currentLocation, setCurrentLocation] = useState({
+
+    const [myLocation, setMyLocation] = useState({
         lat: null,
         lng: null,
     });
@@ -16,7 +18,7 @@ export default function MapPage(props) {
     useEffect(() => {
         navigator.geolocation.getCurrentPosition(
             (position) => {
-                setCurrentLocation({
+                setMyLocation({
                     lat: position.coords.latitude,
                     lng: position.coords.longitude,
                 });
@@ -30,7 +32,6 @@ export default function MapPage(props) {
     return (
         <AuthenticatedLayout
             auth={props.auth}
-            errors={props.errors}
             header={
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">
                     MAP画面
@@ -39,17 +40,19 @@ export default function MapPage(props) {
         >
             <Head title="MAP画面" />
 
-            <div className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        {!isLoaded || currentLocation.lat == null ? (
-                            <div className="p-6 text-gray-900">
-                                MAP読み込み中...
-                            </div>
-                        ) : (
-                            <Map currentLocation={currentLocation} />
-                        )}
-                    </div>
+            <div>
+                <div>
+                    {!isLoaded || myLocation.lat == null ? (
+                        <CircularProgress className="absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2"/>
+                    ) : (
+                        <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                            <Map
+                                myLocation={myLocation}
+                                weatherList={props.weatherList}
+                                windDirectionList={props.windDirectionList}
+                            />
+                        </div>
+                    )}
                 </div>
             </div>
         </AuthenticatedLayout>
