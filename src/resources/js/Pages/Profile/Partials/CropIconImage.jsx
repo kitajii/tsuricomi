@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
 import CropperModal from "../../../Components/CropImageModal/CropperModal";
-import { Button } from "@mui/material";
 import getCroppedImg from "../../../Components/CropImageModal/getCroppedImg";
 import InputError from "@/Components/InputError";
 export const ASPECT_RATIO = 6 / 6;
@@ -114,31 +113,29 @@ const CropIconImage = (props) => {
 
     return (
         <div>
-            <div className="mt-6">
-                <Button variant="contained" component="label">
-                    画像を選択
-                    <input
-                        type="file"
-                        name="icon"
-                        hidden
-                        onChange={onFileChange}
-                    />
-                </Button>
-                <InputError className="mt-2" message={props.errors.icon} />
-            </div>
-            <div className="mt-3 w-[300px] h-[300px] flex items-center rounded-lg overflow-hidden bg-gray-300">
-                {croppedImgSrc ? (
-                    <img
-                        src={croppedImgSrc}
-                        alt="アイコン画像"
-                        className="w-full object-contain bg-gray-300"
-                    />
-                ) : (
-                    <div className="bg-gray-300 w-full h-full flex items-center justify-center text-white font-bold">
-                        アイコンが未登録です
-                    </div>
-                )}
-            </div>
+            <label className="w-[300px] inline-block">
+                <input
+                    type="file"
+                    name="icon"
+                    hidden
+                    onChange={onFileChange}
+                />
+
+                <div className="mt-3 w-[300px] h-[300px] flex items-center rounded-lg overflow-hidden bg-gray-300">
+                    {croppedImgSrc ? (
+                        <img
+                            src={croppedImgSrc}
+                            alt="アイコン画像"
+                            className="w-full object-contain bg-gray-300"
+                        />
+                    ) : (
+                        <div className="bg-gray-300 w-full h-full flex items-center justify-center text-white font-bold">
+                            アイコンが未登録です
+                        </div>
+                    )}
+                </div>
+            </label>
+            <InputError className="mt-2" message={props.errors.icon} />
             <CropperModal
                 crop={crop}
                 setCrop={setCrop}
