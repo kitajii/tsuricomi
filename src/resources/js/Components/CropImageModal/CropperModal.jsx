@@ -1,7 +1,6 @@
 import { Button, Modal, Slider } from "@mui/material";
 import React from "react";
 import Cropper from "react-easy-crop";
-import { ASPECT_RATIO, CROP_WIDTH } from "../../Pages/Profile/Partials/CropIconImage";
 
 const CropperModal = ({
   crop,
@@ -14,7 +13,9 @@ const CropperModal = ({
   imgSrc,
   showCroppedImage,
   onMediaLoaded,
-  minZoom
+  minZoom,
+  aspectRatio,
+  cropWidth,
 }) => {
   return (
     <Modal open={open} onClose={onClose} className="flex items-center justify-center" slotProps={{ backdrop: { style: { backgroundColor: 'rgba(0,0,0,0.8)' } } }}>
@@ -27,13 +28,13 @@ const CropperModal = ({
               zoom={zoom}
               minZoom={minZoom}
               maxZoom={minZoom + 3}
-              aspect={ASPECT_RATIO}
+              aspect={aspectRatio}
               onCropChange={setCrop}
               onCropComplete={onCropComplete}
               onZoomChange={setZoom}
               cropSize={{
-                width: CROP_WIDTH,
-                height: CROP_WIDTH / ASPECT_RATIO
+                width: cropWidth,
+                height: cropWidth / aspectRatio
               }}
               classes={{
                 containerClassName: "h-[400px] rounded-t-lg bg-gray-100 relative",

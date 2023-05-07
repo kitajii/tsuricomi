@@ -11,6 +11,7 @@ import {
     TextField,
 } from "@mui/material";
 import Modal from "@/Components/Modal";
+import CropImage from "./CropImage";
 
 export default function CreateRecordModal({
     location,
@@ -19,11 +20,11 @@ export default function CreateRecordModal({
     weatherList,
     windDirectionList,
 }) {
-    const { data, setData, post, errors, processing, recentlySuccessful } =
+    const { data, setData, post, errors, setError, clearErrors, processing, recentlySuccessful, reset } =
         useForm({
-            photo: null,
-            photo2: null,
-            photo3: null,
+            image1: null,
+            image2: null,
+            image3: null,
             size: null,
             weight: null,
             public_memo: null,
@@ -93,13 +94,62 @@ export default function CreateRecordModal({
     const submit = (e) => {
         e.preventDefault();
 
-        post(route("record.update"));
+        post(route("record.update"), {
+            forceFormData: true,
+        });
     };
 
-    const handleClose = () => setCreateRecordModalOpen(false);
+    const handleClose = () => {
+        setCreateRecordModalOpen(false);
+        reset();
+    }
     return (
         <Modal show={createRecordModalOpen} onClose={handleClose}>
             <form onSubmit={submit} className="p-6 space-y-3">
+                <div className="flex space-x-2 overflow-auto">
+                    <div>
+                        <CropImage
+                            setData={setData}
+                            imageUrl={null}
+                            errors={errors}
+                            setError={setError}
+                            clearErrors={clearErrors}
+                            imageName="image1"
+                            previewText="画像を追加する"
+                            processing={processing}
+                        />
+                        <InputError className="mt-2" message={errors.image1} />
+                    </div>
+                    {data.image1 != null &&
+                        <div>
+                            <CropImage
+                                setData={setData}
+                                imageUrl={null}
+                                errors={errors}
+                                setError={setError}
+                                clearErrors={clearErrors}
+                                imageName="image2"
+                                previewText="画像を追加する"
+                                processing={processing}
+                            />
+                            <InputError className="mt-2" message={errors.image2} />
+                        </div>}
+                    {data.image2 != null &&
+                        <div>
+                            <CropImage
+                                setData={setData}
+                                imageUrl={null}
+                                errors={errors}
+                                setError={setError}
+                                clearErrors={clearErrors}
+                                imageName="image3"
+                                previewText="画像を追加する"
+                                processing={processing}
+                            />
+                            <InputError className="mt-2" message={errors.image3} />
+                        </div>
+                    }
+                </div>
                 <div>
                     <FormControl
                         variant="standard"

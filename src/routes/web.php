@@ -35,7 +35,7 @@ Route::middleware(['auth:user', 'verified'])->group(function () {
     Route::get('/map', [MapController::class, 'map'])->name('map');
     
     // 釣果
-    Route::patch('/record', [RecordController::class, 'update'])->name('record.update');
+    Route::post('/record', [RecordController::class, 'update'])->name('record.update');
     Route::get('/record/list', [RecordController::class, 'list'])->name('record.list');
     Route::get('/record/detail', [RecordController::class, 'detail'])->name('record.detail');
     Route::delete('/record', [RecordController::class, 'destroy'])->name('record.destroy');

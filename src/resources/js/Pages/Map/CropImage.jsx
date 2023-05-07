@@ -1,11 +1,10 @@
 import React, { useState, useCallback, useEffect } from "react";
-import InputError from "@/Components/InputError";
 import CropperModal from "@/Components/CropImageModal/CropperModal";
 import getCroppedImg from "@/Components/CropImageModal/getCroppedImg";
 export const ASPECT_RATIO = 6 / 6;
 export const CROP_WIDTH = 300;
 
-const CropIconImage = (props) => {
+const CropImage = (props) => {
     /** Cropモーダルの開閉 */
     const [isOpen, setIsOpen] = useState(false);
 
@@ -18,12 +17,12 @@ const CropIconImage = (props) => {
     const [minZoom, setMinZoom] = useState(1);
 
     /** 切り取る領域の情報 */
-    const [crop, setCrop] = useState({ x: 0, y: 0 });
+    const [crop, setCrop] = useState({ unit: "px", x: 0, y: 0, width: 200, height: 200,});
     /** 切り取る領域の情報 */
     const [croppedAreaPixels, setCroppedAreaPixels] = useState();
 
     /** 切り取ったあとの画像URL */
-    const [croppedImgSrc, setCroppedImgSrc] = useState(props.iconUrl);
+    const [croppedImgSrc, setCroppedImgSrc] = useState(props.imageUrl);
 
     const [formData, setFormData] = useState(null);
 
@@ -40,14 +39,14 @@ const CropIconImage = (props) => {
             // 拡張子チェック
             var fileMimeType = e.target.files[0].type;
             if (!ARROW_MIME_TYPE.includes(fileMimeType)) {
-                props.clearErrors("icon");
+                props.clearErrors(props.imageName);
                 props.setError(
-                    "icon",
+                    props.imageName,
                     "jpg,jpeg,pngの画像のみアップロード可能です。"
                 );
                 return;
             }
-            props.clearErrors("icon");
+            props.clearErrors(props.imageName);
             const reader = new FileReader();
             reader.addEventListener("load", () => {
                 if (reader.result) {
@@ -108,34 +107,39 @@ const CropIconImage = (props) => {
         const newImage = new File([formData], originalFile.name, {
             type: originalFile.type,
         });
-        props.setData("icon", newImage);
+        props.setData(props.imageName, newImage);
     }, [formData]);
-
     return (
         <div>
-            <label className="w-[300px] inline-block">
-                <input
-                    type="file"
-                    name="icon"
-                    hidden
-                    onChange={onFileChange}
-                />
+            <label className="w-[200px] inline-block">
+                {props.processing ?
+                    <input
+                        type="file"
+                        hidden
+                        disabled
+                    /> :
+                    <input
+                        type="file"
+                        name={props.imageName}
+                        hidden
+                        onChange={onFileChange}
+                    />
+                }
 
-                <div className="mt-3 w-[300px] h-[300px] flex items-center rounded-lg overflow-hidden bg-gray-300">
+                <div className="mt-3 w-[200px] h-[200px] flex items-center rounded-lg overflow-hidden bg-gray-300">
                     {croppedImgSrc ? (
                         <img
                             src={croppedImgSrc}
-                            alt="アイコン画像"
+                            alt="画像"
                             className="w-full object-contain bg-gray-300"
                         />
                     ) : (
                         <div className="bg-gray-300 w-full h-full flex items-center justify-center text-white font-bold">
-                            アイコンが未登録です
+                            {props.previewText}
                         </div>
                     )}
                 </div>
             </label>
-            <InputError className="mt-2" message={props.errors.icon} />
             <CropperModal
                 crop={crop}
                 setCrop={setCrop}
@@ -154,4 +158,4 @@ const CropIconImage = (props) => {
         </div>
     );
 };
-export default CropIconImage;
+export default CropImage;
