@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RecordUpdateRequest;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,9 +19,9 @@ class RecordController extends Controller
     /**
      * 釣果登録・更新
      */
-    public function update(Request $request)
+    public function update(RecordUpdateRequest $request)
     {
-        dd($request);
+        dd($request->all());
     }
 
     /**

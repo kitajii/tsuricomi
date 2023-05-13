@@ -111,7 +111,7 @@ const CropImage = (props) => {
     }, [formData]);
     return (
         <div>
-            <label className="w-[200px] inline-block">
+            <label className={`inline-block ${props.previewWidthClassName}`}>
                 {props.processing ?
                     <input
                         type="file"
@@ -125,8 +125,7 @@ const CropImage = (props) => {
                         onChange={onFileChange}
                     />
                 }
-
-                <div className="mt-3 w-[200px] h-[200px] flex items-center rounded-lg overflow-hidden bg-gray-300">
+                <div className={`mt-3 flex items-center rounded-lg overflow-hidden bg-gray-300 ${props.previewWidthClassName} ${props.previewHeightClassName}`}>
                     {croppedImgSrc ? (
                         <img
                             src={croppedImgSrc}

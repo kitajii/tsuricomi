@@ -161,6 +161,21 @@ return [
         'password' => 'パスワード',
         'birthday' => '生年月日',
         'icon' => 'アイコン',
+
+        'image1' => '画像',
+        'image2' => '画像',
+        'image3' => '画像',
+        'fishing_date' => '日付',
+        'fishing_time' => '時間',
+        'size' => 'サイズ',
+        'weight' => '重さ',
+        'public_memo' => '公開メモ',
+        'self_memo' => '非公開メモ',
+        'lure' => 'ルアー',
+        'weather' => '天気',
+        'wind_direction' => '風向',
+        'latitude' => '緯度',
+        'longitude' => '経度',
     ],
 
 ];

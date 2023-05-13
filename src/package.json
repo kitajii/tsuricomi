@@ -21,11 +21,15 @@
         "vite": "^4.0.0"
     },
     "dependencies": {
+        "@date-io/date-fns": "^2.16.0",
         "@emotion/react": "^11.10.6",
         "@emotion/styled": "^11.10.6",
         "@mui/icons-material": "^5.11.11",
+        "@mui/lab": "^5.0.0-alpha.129",
         "@mui/material": "^5.11.14",
+        "@mui/x-date-pickers": "^6.3.1",
         "@react-google-maps/api": "^2.18.1",
+        "date-fns": "^2.30.0",
         "react-easy-crop": "^4.7.4",
         "react-icons": "^4.8.0",
         "react-image-crop": "^10.0.9"

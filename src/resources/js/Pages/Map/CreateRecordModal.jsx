@@ -12,6 +12,12 @@ import {
 } from "@mui/material";
 import Modal from "@/Components/Modal";
 import CropImage from "./CropImage";
+import { format } from 'date-fns'
+import { ja } from "date-fns/locale";
+import { LocalizationProvider, MobileDatePicker, MobileTimePicker, TimePicker, jaJP } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+import { useEffect } from "react";
 
 export default function CreateRecordModal({
     location,
@@ -25,6 +31,8 @@ export default function CreateRecordModal({
             image1: null,
             image2: null,
             image3: null,
+            fishing_date: format(new Date(), "yyyy/MM/dd"),
+            fishing_time: format(new Date(), "yyyy/MM/dd HH:mm"), //時刻だけではDate型に変換出来ない為、日付も含めている
             size: null,
             weight: null,
             public_memo: null,
@@ -32,12 +40,17 @@ export default function CreateRecordModal({
             lure: null,
             weather: 0,
             wind_direction: 0,
-            date: null,
-            temperature: null,
-            water_temperature: null,
             latitude: location.lat,
             longitude: location.lng,
         });
+
+    /**
+     * モーダルを開くタイミングで釣果日時に現在時刻をセットする
+     */
+    useEffect(() => {
+        setData("fishing_date", format(new Date(), "yyyy/MM/dd"));
+        setData("fishing_time", format(new Date(), "yyyy/MM/dd HH:mm"));
+    }, [createRecordModalOpen])
 
     /**
      * 数字のみinputの入力禁止文字
@@ -103,10 +116,11 @@ export default function CreateRecordModal({
         setCreateRecordModalOpen(false);
         reset();
     }
+
     return (
         <Modal show={createRecordModalOpen} onClose={handleClose}>
             <form onSubmit={submit} className="p-6 space-y-3">
-                <div className="flex space-x-2 overflow-auto">
+                <div className="flex space-x-4 overflow-auto">
                     <div>
                         <CropImage
                             setData={setData}
@@ -115,7 +129,9 @@ export default function CreateRecordModal({
                             setError={setError}
                             clearErrors={clearErrors}
                             imageName="image1"
-                            previewText="画像を追加する"
+                            previewText={<AddAPhotoIcon fontSize="large" />}
+                            previewWidthClassName="sm:w-[180px] w-[150px]"
+                            previewHeightClassName="sm:h-[180px] h-[150px]"
                             processing={processing}
                         />
                         <InputError className="mt-2" message={errors.image1} />
@@ -129,7 +145,9 @@ export default function CreateRecordModal({
                                 setError={setError}
                                 clearErrors={clearErrors}
                                 imageName="image2"
-                                previewText="画像を追加する"
+                                previewText={<AddAPhotoIcon fontSize="large" />}
+                                previewWidthClassName="sm:w-[180px] w-[150px]"
+                                previewHeightClassName="sm:h-[180px] h-[150px]"
                                 processing={processing}
                             />
                             <InputError className="mt-2" message={errors.image2} />
@@ -143,12 +161,49 @@ export default function CreateRecordModal({
                                 setError={setError}
                                 clearErrors={clearErrors}
                                 imageName="image3"
-                                previewText="画像を追加する"
+                                previewText={<AddAPhotoIcon fontSize="large" />}
+                                previewWidthClassName="sm:w-[180px] w-[150px]"
+                                previewHeightClassName="sm:h-[180px] h-[150px]"
                                 processing={processing}
                             />
                             <InputError className="mt-2" message={errors.image3} />
                         </div>
                     }
+                </div>
+                <div className="flex">
+                    <LocalizationProvider
+                        dateAdapter={AdapterDateFns}
+                        adapterLocale={ja}
+                        localeText={jaJP.components.MuiLocalizationProvider.defaultProps.localeText}
+                    >
+                        <div className="mr-2">
+                            <MobileDatePicker
+                                label="日付"
+                                format="yyyy/MM/dd"
+                                value={new Date(data.fishing_date)}
+                                maxDate={new Date()}
+                                onChange={(date) => setData("fishing_date", format(date, "yyyy/MM/dd"))}
+                                slotProps={{ textField: { variant: 'standard' }, actionBar: {actions: ['today']} }}
+                                className="w-[100px]"
+                                required
+                            />
+                            <InputError className="mt-2" message={errors.fishing_date} />
+                        </div>
+                        <div>
+                            <TimePicker
+                                label="時間"
+                                format="HH:mm"
+                                value={new Date(data.fishing_time)}
+                                onChange={(date) => setData("fishing_time", format(date, "yyyy/MM/dd HH:mm"))}
+                                slotProps={{ textField: { variant: 'standard' }, actionBar: {actions: []} }}
+                                ampm={false}
+                                timeSteps={{ hours: 1, minutes: 1}}
+                                className="w-[100px]"
+                                required
+                            />
+                            <InputError className="mt-2" message={errors.fishing_time} />
+                        </div>
+                    </LocalizationProvider>
                 </div>
                 <div>
                     <FormControl
@@ -179,6 +234,7 @@ export default function CreateRecordModal({
                                     max: 500000,
                                 },
                             }}
+                            required
                         />
                         <InputError
                             className="mt-2"
@@ -215,6 +271,7 @@ export default function CreateRecordModal({
                                     max: 500000,
                                 },
                             }}
+                            required
                         />
                         <InputError
                             className="mt-2"
@@ -235,7 +292,6 @@ export default function CreateRecordModal({
                         }
                         className="block"
                         autoComplete="off"
-                        required
                         fullWidth
                     />
                     <InputError
